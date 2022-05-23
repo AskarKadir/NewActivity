@@ -46,18 +46,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         recyclerView = findViewById(R.id.recycleView);
         fab = findViewById(R.id.floatingBtn);
-        BacaData();
+
+//        BacaData();
 
         //bagian tata letak dan wadah
         adapter = new TemanAdapter(temanArrayList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(),EditTeman.class);
+                startActivity(i);
+            }
+        });
     }
+
+
     public  void BacaData(){
+        temanArrayList.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JsonArrayRequest jArr = new JsonArrayRequest(url_select, new Response.Listener<JSONArray>() {
@@ -82,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                }
+                adapter.notifyDataSetChanged();
+            }
             }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
